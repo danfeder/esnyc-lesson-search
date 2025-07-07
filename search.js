@@ -381,6 +381,253 @@ function updateFilterGroupCount(elementId, count) {
     }
 }
 
+// Update filter counts based on current filtered results
+function updateDynamicFilterCounts() {
+    // Get current filter state
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const selectedGrades = getSelectedValues('gradeLevelFilters');
+    const selectedThemes = getSelectedValues('thematicFilters');
+    const selectedSeasons = getSelectedValues('seasonFilters');
+    const includeAllSeasons = document.getElementById('includeAllSeasons').checked;
+    const selectedCompetencies = getSelectedValues('competencyFilters');
+    const selectedCultures = getSelectedValues('culturalFilter');
+    const selectedLocations = getSelectedValues('locationFilters');
+    const selectedFormat = document.getElementById('formatFilter').value;
+    const hasCooking = document.getElementById('hasCookingYes').checked;
+    const hasGarden = document.getElementById('hasGardenYes').checked;
+    const noCooking = document.getElementById('noCooking').checked;
+    
+    // Grade level counts
+    const gradeCounts = {};
+    filteredLessons.forEach(lesson => {
+        lesson.metadata.gradeLevel.forEach(grade => {
+            gradeCounts[grade] = (gradeCounts[grade] || 0) + 1;
+        });
+    });
+    
+    // If no grade filters are selected, show counts for what would happen if each grade was selected
+    if (selectedGrades.length === 0) {
+        const potentialGradeCounts = {};
+        document.querySelectorAll('#gradeLevelFilters input[type="checkbox"]').forEach(checkbox => {
+            if (checkbox.value) {
+                potentialGradeCounts[checkbox.value] = allLessons.filter(lesson => {
+                    // Check if lesson would match all current filters PLUS this grade
+                    if (!lesson.metadata.gradeLevel.includes(checkbox.value)) return false;
+                    if (searchTerm && !matchesTextSearch(lesson, searchTerm)) return false;
+                    if (selectedThemes.length && !hasAnyMatch(lesson.metadata.thematicCategories, selectedThemes)) return false;
+                    if (selectedSeasons.length) {
+                        const lessonSeasons = lesson.metadata.seasonTiming;
+                        const hasSelectedSeason = hasAnyMatch(lessonSeasons, selectedSeasons);
+                        const hasAllSeasons = lessonSeasons.includes('All Seasons');
+                        if (!hasSelectedSeason && !(includeAllSeasons && hasAllSeasons)) return false;
+                    }
+                    if (selectedCompetencies.length && !hasAnyMatch(lesson.metadata.coreCompetencies, selectedCompetencies)) return false;
+                    if (selectedCultures.length && !matchesCulturalHeritage(lesson.metadata.culturalHeritage, selectedCultures)) return false;
+                    if (selectedLocations.length && !hasAnyMatch(lesson.metadata.locationRequirements, selectedLocations)) return false;
+                    if (selectedFormat && lesson.metadata.lessonFormat !== selectedFormat) return false;
+                    if (hasCooking && (!lesson.metadata.cookingSkills || lesson.metadata.cookingSkills.length === 0)) return false;
+                    if (hasGarden && (!lesson.metadata.gardenSkills || lesson.metadata.gardenSkills.length === 0)) return false;
+                    if (noCooking && lesson.metadata.cookingSkills && lesson.metadata.cookingSkills.length > 0) return false;
+                    return true;
+                }).length;
+            }
+        });
+        
+        document.querySelectorAll('#gradeLevelFilters label').forEach(label => {
+            const checkbox = label.querySelector('input');
+            const count = potentialGradeCounts[checkbox.value] || 0;
+            const countSpan = label.querySelector('.count');
+            if (countSpan) countSpan.textContent = `(${count})`;
+        });
+    } else {
+        // Show counts within current filtered results
+        document.querySelectorAll('#gradeLevelFilters label').forEach(label => {
+            const checkbox = label.querySelector('input');
+            const count = gradeCounts[checkbox.value] || 0;
+            const countSpan = label.querySelector('.count');
+            if (countSpan) countSpan.textContent = `(${count})`;
+        });
+    }
+    
+    // Theme counts
+    const themeCounts = {};
+    filteredLessons.forEach(lesson => {
+        lesson.metadata.thematicCategories.forEach(theme => {
+            themeCounts[theme] = (themeCounts[theme] || 0) + 1;
+        });
+    });
+    
+    // If no theme filters are selected, show potential counts
+    if (selectedThemes.length === 0) {
+        const potentialThemeCounts = {};
+        document.querySelectorAll('#thematicFilters input[type="checkbox"]').forEach(checkbox => {
+            if (checkbox.value) {
+                potentialThemeCounts[checkbox.value] = allLessons.filter(lesson => {
+                    if (!lesson.metadata.thematicCategories.includes(checkbox.value)) return false;
+                    if (searchTerm && !matchesTextSearch(lesson, searchTerm)) return false;
+                    if (selectedGrades.length && !hasAnyMatch(lesson.metadata.gradeLevel, selectedGrades)) return false;
+                    if (selectedSeasons.length) {
+                        const lessonSeasons = lesson.metadata.seasonTiming;
+                        const hasSelectedSeason = hasAnyMatch(lessonSeasons, selectedSeasons);
+                        const hasAllSeasons = lessonSeasons.includes('All Seasons');
+                        if (!hasSelectedSeason && !(includeAllSeasons && hasAllSeasons)) return false;
+                    }
+                    if (selectedCompetencies.length && !hasAnyMatch(lesson.metadata.coreCompetencies, selectedCompetencies)) return false;
+                    if (selectedCultures.length && !matchesCulturalHeritage(lesson.metadata.culturalHeritage, selectedCultures)) return false;
+                    if (selectedLocations.length && !hasAnyMatch(lesson.metadata.locationRequirements, selectedLocations)) return false;
+                    if (selectedFormat && lesson.metadata.lessonFormat !== selectedFormat) return false;
+                    if (hasCooking && (!lesson.metadata.cookingSkills || lesson.metadata.cookingSkills.length === 0)) return false;
+                    if (hasGarden && (!lesson.metadata.gardenSkills || lesson.metadata.gardenSkills.length === 0)) return false;
+                    if (noCooking && lesson.metadata.cookingSkills && lesson.metadata.cookingSkills.length > 0) return false;
+                    return true;
+                }).length;
+            }
+        });
+        
+        document.querySelectorAll('#thematicFilters label').forEach(label => {
+            const checkbox = label.querySelector('input');
+            const count = potentialThemeCounts[checkbox.value] || 0;
+            const countSpan = label.querySelector('.count');
+            if (countSpan) countSpan.textContent = `(${count})`;
+        });
+    } else {
+        document.querySelectorAll('#thematicFilters label').forEach(label => {
+            const checkbox = label.querySelector('input');
+            const count = themeCounts[checkbox.value] || 0;
+            const countSpan = label.querySelector('.count');
+            if (countSpan) countSpan.textContent = `(${count})`;
+        });
+    }
+    
+    // Season counts
+    const seasonCounts = {};
+    filteredLessons.forEach(lesson => {
+        lesson.metadata.seasonTiming.forEach(season => {
+            seasonCounts[season] = (seasonCounts[season] || 0) + 1;
+        });
+    });
+    
+    if (selectedSeasons.length === 0) {
+        const potentialSeasonCounts = {};
+        document.querySelectorAll('#seasonFilters input[type="checkbox"]').forEach(checkbox => {
+            if (checkbox.value) {
+                potentialSeasonCounts[checkbox.value] = allLessons.filter(lesson => {
+                    const lessonSeasons = lesson.metadata.seasonTiming;
+                    if (!lessonSeasons.includes(checkbox.value) && !(includeAllSeasons && lessonSeasons.includes('All Seasons'))) return false;
+                    if (searchTerm && !matchesTextSearch(lesson, searchTerm)) return false;
+                    if (selectedGrades.length && !hasAnyMatch(lesson.metadata.gradeLevel, selectedGrades)) return false;
+                    if (selectedThemes.length && !hasAnyMatch(lesson.metadata.thematicCategories, selectedThemes)) return false;
+                    if (selectedCompetencies.length && !hasAnyMatch(lesson.metadata.coreCompetencies, selectedCompetencies)) return false;
+                    if (selectedCultures.length && !matchesCulturalHeritage(lesson.metadata.culturalHeritage, selectedCultures)) return false;
+                    if (selectedLocations.length && !hasAnyMatch(lesson.metadata.locationRequirements, selectedLocations)) return false;
+                    if (selectedFormat && lesson.metadata.lessonFormat !== selectedFormat) return false;
+                    if (hasCooking && (!lesson.metadata.cookingSkills || lesson.metadata.cookingSkills.length === 0)) return false;
+                    if (hasGarden && (!lesson.metadata.gardenSkills || lesson.metadata.gardenSkills.length === 0)) return false;
+                    if (noCooking && lesson.metadata.cookingSkills && lesson.metadata.cookingSkills.length > 0) return false;
+                    return true;
+                }).length;
+            }
+        });
+        
+        document.querySelectorAll('#seasonFilters label').forEach(label => {
+            const checkbox = label.querySelector('input');
+            if (checkbox.value) {
+                const count = potentialSeasonCounts[checkbox.value] || 0;
+                const countSpan = label.querySelector('.count');
+                if (countSpan) countSpan.textContent = `(${count})`;
+            }
+        });
+    } else {
+        document.querySelectorAll('#seasonFilters label').forEach(label => {
+            const checkbox = label.querySelector('input');
+            if (checkbox.value) {
+                const count = seasonCounts[checkbox.value] || 0;
+                const countSpan = label.querySelector('.count');
+                if (countSpan) countSpan.textContent = `(${count})`;
+            }
+        });
+    }
+    
+    // Competency counts
+    const competencyCounts = {};
+    filteredLessons.forEach(lesson => {
+        lesson.metadata.coreCompetencies.forEach(comp => {
+            competencyCounts[comp] = (competencyCounts[comp] || 0) + 1;
+        });
+    });
+    
+    document.querySelectorAll('#competencyFilters label').forEach(label => {
+        const checkbox = label.querySelector('input');
+        const count = competencyCounts[checkbox.value] || 0;
+        const countSpan = label.querySelector('.count');
+        if (countSpan) countSpan.textContent = `(${count})`;
+    });
+    
+    // Location counts
+    const locationCounts = {};
+    filteredLessons.forEach(lesson => {
+        lesson.metadata.locationRequirements.forEach(loc => {
+            locationCounts[loc] = (locationCounts[loc] || 0) + 1;
+        });
+    });
+    
+    document.querySelectorAll('#locationFilters label').forEach(label => {
+        const checkbox = label.querySelector('input');
+        const count = locationCounts[checkbox.value] || 0;
+        const countSpan = label.querySelector('.count');
+        if (countSpan) countSpan.textContent = `(${count})`;
+    });
+    
+    // Activity type counts
+    const cookingCount = filteredLessons.filter(l => l.metadata.cookingSkills?.length > 0).length;
+    const gardenCount = filteredLessons.filter(l => l.metadata.gardenSkills?.length > 0).length;
+    const noCookingCount = filteredLessons.filter(l => !l.metadata.cookingSkills || l.metadata.cookingSkills.length === 0).length;
+    
+    document.getElementById('cookingCount').textContent = `(${cookingCount})`;
+    document.getElementById('gardenCount').textContent = `(${gardenCount})`;
+    document.getElementById('noCookingCount').textContent = `(${noCookingCount})`;
+    
+    // Cultural heritage counts
+    const culturalCounts = {};
+    filteredLessons.forEach(lesson => {
+        (lesson.metadata.culturalHeritage || []).forEach(culture => {
+            culturalCounts[culture] = (culturalCounts[culture] || 0) + 1;
+        });
+    });
+    
+    document.querySelectorAll('.cultural-tree input[type="checkbox"]').forEach(checkbox => {
+        const count = culturalCounts[checkbox.value] || 0;
+        const label = checkbox.closest('label');
+        const countSpan = label.querySelector('.count');
+        if (countSpan) countSpan.textContent = `(${count})`;
+    });
+    
+    // Update grade group counts based on filtered results
+    updateDynamicGradeGroupCounts();
+}
+
+function updateDynamicGradeGroupCounts() {
+    const earlyElemGrades = ['3K', 'PK', 'K', '1', '2'];
+    const elemGrades = ['3', '4', '5'];
+    const middleGrades = ['6', '7', '8'];
+    
+    // Count from filtered lessons
+    const earlyElemCount = filteredLessons.filter(lesson => 
+        lesson.metadata.gradeLevel.some(grade => earlyElemGrades.includes(grade))
+    ).length;
+    document.getElementById('earlyElemCount').textContent = `(${earlyElemCount})`;
+    
+    const elemCount = filteredLessons.filter(lesson => 
+        lesson.metadata.gradeLevel.some(grade => elemGrades.includes(grade))
+    ).length;
+    document.getElementById('elemCount').textContent = `(${elemCount})`;
+    
+    const middleCount = filteredLessons.filter(lesson => 
+        lesson.metadata.gradeLevel.some(grade => middleGrades.includes(grade))
+    ).length;
+    document.getElementById('middleCount').textContent = `(${middleCount})`;
+}
+
 // Update active filters display
 function updateActiveFilters() {
     activeFilters = {};
@@ -599,6 +846,9 @@ function performSearch() {
     
     // Update active filters display
     updateActiveFilters();
+    
+    // Update filter counts based on current results
+    updateDynamicFilterCounts();
     
     // Display results
     displayResults();
