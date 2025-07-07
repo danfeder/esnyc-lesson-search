@@ -350,19 +350,27 @@ function updateFilterCounts() {
 }
 
 function updateGradeGroupCounts(gradeCounts) {
+    // Count unique lessons for each grade group
+    const earlyElemGrades = ['3K', 'PK', 'K', '1', '2'];
+    const elemGrades = ['3', '4', '5'];
+    const middleGrades = ['6', '7', '8'];
+    
     // Early Elementary (3K-2)
-    const earlyElemCount = ['3K', 'PK', 'K', '1', '2']
-        .reduce((sum, grade) => sum + (gradeCounts[grade] || 0), 0);
+    const earlyElemCount = allLessons.filter(lesson => 
+        lesson.metadata.gradeLevel.some(grade => earlyElemGrades.includes(grade))
+    ).length;
     document.getElementById('earlyElemCount').textContent = `(${earlyElemCount})`;
     
     // Elementary (3-5)
-    const elemCount = ['3', '4', '5']
-        .reduce((sum, grade) => sum + (gradeCounts[grade] || 0), 0);
+    const elemCount = allLessons.filter(lesson => 
+        lesson.metadata.gradeLevel.some(grade => elemGrades.includes(grade))
+    ).length;
     document.getElementById('elemCount').textContent = `(${elemCount})`;
     
     // Middle School (6-8)
-    const middleCount = ['6', '7', '8']
-        .reduce((sum, grade) => sum + (gradeCounts[grade] || 0), 0);
+    const middleCount = allLessons.filter(lesson => 
+        lesson.metadata.gradeLevel.some(grade => middleGrades.includes(grade))
+    ).length;
     document.getElementById('middleCount').textContent = `(${middleCount})`;
 }
 
