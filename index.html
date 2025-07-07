@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESNYC Lesson Library</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header">
+        <div class="header-content">
+            <div class="logo-section">
+                <span class="logo-icon">🌱</span>
+                <div>
+                    <h1>Edible Schoolyard NYC</h1>
+                    <p class="tagline">Lesson Library</p>
+                </div>
+            </div>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <span class="stat-number">831</span>
+                    <span class="stat-label">Total Lessons</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">16</span>
+                    <span class="stat-label">Categories</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Search Bar -->
+        <div class="search-section">
+            <div class="search-wrapper">
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Search lessons by keyword, title, ingredient, or topic..." aria-label="Search lessons">
+                    <button id="searchBtn" class="btn-primary" aria-label="Search">
+                        <span class="search-icon">🔍</span> Search
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Active Filters Display -->
+            <div id="activeFilters" class="active-filters" style="display: none;">
+                <span class="active-label">Active filters:</span>
+                <div id="activeFiltersList" class="filter-badges"></div>
+                <button id="clearAllFilters" class="clear-all-btn">Clear all</button>
+            </div>
+        </div>
+
+        <!-- Two Column Layout -->
+        <div class="content-layout">
+            <!-- Left Sidebar - Filters -->
+            <aside class="filters-sidebar">
+                <div class="sidebar-header">
+                    <h2>Filters</h2>
+                    <button id="mobileSidebarClose" class="mobile-only close-sidebar" aria-label="Close filters">×</button>
+                </div>
+                
+                <!-- Main Filter Groups -->
+                <div class="filter-group collapsible">
+                    <button class="filter-header" aria-expanded="true" aria-controls="gradeFilter">
+                        <span class="filter-icon">📚</span>
+                        <span>Grade Level</span>
+                        <span class="filter-count" id="gradeCount"></span>
+                        <span class="collapse-icon">▼</span>
+                    </button>
+                    <div class="filter-content" id="gradeFilter">
+                        <div class="grade-groups" id="gradeLevelFilters">
+                            <div class="grade-group-item">
+                                <label class="grade-group-label">
+                                    <input type="checkbox" class="grade-group-checkbox" data-grades="3K,PK,K,1,2" value="early-elementary">
+                                    <span class="grade-group-name">Early Elementary (3K-2)</span>
+                                    <span class="count" id="earlyElemCount"></span>
+                                </label>
+                                <button class="expand-grades-btn" aria-label="Show individual grades">
+                                    <span class="expand-icon">▶</span>
+                                </button>
+                                <div class="individual-grades" style="display: none;">
+                                    <label><input type="checkbox" value="3K"> 3K <span class="count"></span></label>
+                                    <label><input type="checkbox" value="PK"> PK <span class="count"></span></label>
+                                    <label><input type="checkbox" value="K"> K <span class="count"></span></label>
+                                    <label><input type="checkbox" value="1"> 1st <span class="count"></span></label>
+                                    <label><input type="checkbox" value="2"> 2nd <span class="count"></span></label>
+                                </div>
+                            </div>
+                            <div class="grade-group-item">
+                                <label class="grade-group-label">
+                                    <input type="checkbox" class="grade-group-checkbox" data-grades="3,4,5" value="elementary">
+                                    <span class="grade-group-name">Elementary (3-5)</span>
+                                    <span class="count" id="elemCount"></span>
+                                </label>
+                                <button class="expand-grades-btn" aria-label="Show individual grades">
+                                    <span class="expand-icon">▶</span>
+                                </button>
+                                <div class="individual-grades" style="display: none;">
+                                    <label><input type="checkbox" value="3"> 3rd <span class="count"></span></label>
+                                    <label><input type="checkbox" value="4"> 4th <span class="count"></span></label>
+                                    <label><input type="checkbox" value="5"> 5th <span class="count"></span></label>
+                                </div>
+                            </div>
+                            <div class="grade-group-item">
+                                <label class="grade-group-label">
+                                    <input type="checkbox" class="grade-group-checkbox" data-grades="6,7,8" value="middle">
+                                    <span class="grade-group-name">Middle School (6-8)</span>
+                                    <span class="count" id="middleCount"></span>
+                                </label>
+                                <button class="expand-grades-btn" aria-label="Show individual grades">
+                                    <span class="expand-icon">▶</span>
+                                </button>
+                                <div class="individual-grades" style="display: none;">
+                                    <label><input type="checkbox" value="6"> 6th <span class="count"></span></label>
+                                    <label><input type="checkbox" value="7"> 7th <span class="count"></span></label>
+                                    <label><input type="checkbox" value="8"> 8th <span class="count"></span></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-group collapsible">
+                    <button class="filter-header" aria-expanded="true" aria-controls="themeFilter">
+                        <span class="filter-icon">🌿</span>
+                        <span>Thematic Category</span>
+                        <span class="filter-count" id="themeCount"></span>
+                        <span class="collapse-icon">▼</span>
+                    </button>
+                    <div class="filter-content" id="themeFilter">
+                        <div class="checkbox-group" id="thematicFilters">
+                            <label><input type="checkbox" value="Garden Basics"> Garden Basics <span class="count"></span></label>
+                            <label><input type="checkbox" value="Plant Growth"> Plant Growth <span class="count"></span></label>
+                            <label><input type="checkbox" value="Garden Communities"> Garden Communities <span class="count"></span></label>
+                            <label><input type="checkbox" value="Ecosystems"> Ecosystems <span class="count"></span></label>
+                            <label><input type="checkbox" value="Seed to Table"> Seed to Table <span class="count"></span></label>
+                            <label><input type="checkbox" value="Food Systems"> Food Systems <span class="count"></span></label>
+                            <label><input type="checkbox" value="Food Justice"> Food Justice <span class="count"></span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-group collapsible">
+                    <button class="filter-header" aria-expanded="false" aria-controls="seasonFilter">
+                        <span class="filter-icon">🍂</span>
+                        <span>Season & Timing</span>
+                        <span class="filter-count" id="seasonCount"></span>
+                        <span class="collapse-icon">▼</span>
+                    </button>
+                    <div class="filter-content" id="seasonFilter" style="display: none;">
+                        <div class="checkbox-group" id="seasonFilters">
+                            <label><input type="checkbox" value="Fall"> Fall <span class="count"></span></label>
+                            <label><input type="checkbox" value="Winter"> Winter <span class="count"></span></label>
+                            <label><input type="checkbox" value="Spring"> Spring <span class="count"></span></label>
+                            <label><input type="checkbox" value="Summer"> Summer <span class="count"></span></label>
+                            <label><input type="checkbox" value="Beginning of year"> Beginning of year <span class="count"></span></label>
+                            <label><input type="checkbox" value="End of year"> End of year <span class="count"></span></label>
+                            <label class="special-option">
+                                <input type="checkbox" id="includeAllSeasons"> Include year-round lessons
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-group collapsible">
+                    <button class="filter-header" aria-expanded="false" aria-controls="competencyFilter">
+                        <span class="filter-icon">⭐</span>
+                        <span>Core Competencies</span>
+                        <span class="filter-count" id="competencyCount"></span>
+                        <span class="collapse-icon">▼</span>
+                    </button>
+                    <div class="filter-content" id="competencyFilter" style="display: none;">
+                        <div class="checkbox-group" id="competencyFilters">
+                            <label><input type="checkbox" value="Environmental and Community Stewardship"> Environmental & Community <span class="count"></span></label>
+                            <label><input type="checkbox" value="Social Justice"> Social Justice <span class="count"></span></label>
+                            <label><input type="checkbox" value="Social-Emotional Intelligence"> Social-Emotional <span class="count"></span></label>
+                            <label><input type="checkbox" value="Garden Skills and Related Academic Content"> Garden Skills <span class="count"></span></label>
+                            <label><input type="checkbox" value="Kitchen Skills and Related Academic Content"> Kitchen Skills <span class="count"></span></label>
+                            <label><input type="checkbox" value="Culturally Responsive Education"> Culturally Responsive <span class="count"></span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-group collapsible">
+                    <button class="filter-header" aria-expanded="false" aria-controls="locationFilter">
+                        <span class="filter-icon">📍</span>
+                        <span>Location</span>
+                        <span class="filter-count" id="locationCount"></span>
+                        <span class="collapse-icon">▼</span>
+                    </button>
+                    <div class="filter-content" id="locationFilter" style="display: none;">
+                        <div class="checkbox-group" id="locationFilters">
+                            <label><input type="checkbox" value="Indoor"> Indoor <span class="count"></span></label>
+                            <label><input type="checkbox" value="Outdoor"> Outdoor <span class="count"></span></label>
+                            <label><input type="checkbox" value="Both"> Both <span class="count"></span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-group collapsible">
+                    <button class="filter-header" aria-expanded="false" aria-controls="activityFilter">
+                        <span class="filter-icon">🍳</span>
+                        <span>Activity Type</span>
+                        <span class="filter-count" id="activityCount"></span>
+                        <span class="collapse-icon">▼</span>
+                    </button>
+                    <div class="filter-content" id="activityFilter" style="display: none;">
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" id="hasCookingYes" value="cooking"> Has Cooking <span class="count" id="cookingCount"></span></label>
+                            <label><input type="checkbox" id="hasGardenYes" value="garden"> Has Garden <span class="count" id="gardenCount"></span></label>
+                            <label><input type="checkbox" id="noCooking" value="no-cooking"> No Cooking Required <span class="count" id="noCookingCount"></span></label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Advanced Filters Section -->
+                <div class="advanced-section">
+                    <button id="advancedToggle" class="advanced-toggle">
+                        <span>Advanced Filters</span>
+                        <span class="toggle-icon">▶</span>
+                    </button>
+                    
+                    <div id="advancedFilters" class="advanced-filters" style="display: none;">
+                        <div class="filter-group collapsible">
+                            <button class="filter-header" aria-expanded="false" aria-controls="culturalFilter">
+                                <span class="filter-icon">🌍</span>
+                                <span>Cultural Heritage</span>
+                                <span class="filter-count" id="culturalCount"></span>
+                                <span class="collapse-icon">▼</span>
+                            </button>
+                            <div class="filter-content" id="culturalFilter" style="display: none;">
+                                <div class="cultural-tree">
+                                    <!-- Asian -->
+                                    <div class="cultural-region">
+                                        <div class="cultural-header">
+                                            <button class="cultural-toggle" aria-expanded="false">
+                                                <span class="toggle-arrow">▶</span>
+                                            </button>
+                                            <label class="region-label">
+                                                <input type="checkbox" value="Asian" class="region-checkbox">
+                                                <span>Asian</span>
+                                                <span class="count"></span>
+                                            </label>
+                                        </div>
+                                        <div class="cultural-subregions" style="display: none;">
+                                            <label><input type="checkbox" value="East Asian"> East Asian <span class="count"></span></label>
+                                            <div class="cultural-items">
+                                                <label><input type="checkbox" value="Chinese"> Chinese <span class="count"></span></label>
+                                                <label><input type="checkbox" value="Japanese"> Japanese <span class="count"></span></label>
+                                                <label><input type="checkbox" value="Korean"> Korean <span class="count"></span></label>
+                                            </div>
+                                            <label><input type="checkbox" value="Southeast Asian"> Southeast Asian <span class="count"></span></label>
+                                            <div class="cultural-items">
+                                                <label><input type="checkbox" value="Vietnamese"> Vietnamese <span class="count"></span></label>
+                                                <label><input type="checkbox" value="Filipino"> Filipino <span class="count"></span></label>
+                                            </div>
+                                            <label><input type="checkbox" value="South Asian"> South Asian <span class="count"></span></label>
+                                            <div class="cultural-items">
+                                                <label><input type="checkbox" value="Indian"> Indian <span class="count"></span></label>
+                                                <label><input type="checkbox" value="Bengali"> Bengali <span class="count"></span></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Americas -->
+                                    <div class="cultural-region">
+                                        <div class="cultural-header">
+                                            <button class="cultural-toggle" aria-expanded="false">
+                                                <span class="toggle-arrow">▶</span>
+                                            </button>
+                                            <label class="region-label">
+                                                <input type="checkbox" value="Americas" class="region-checkbox">
+                                                <span>Americas</span>
+                                                <span class="count"></span>
+                                            </label>
+                                        </div>
+                                        <div class="cultural-subregions" style="display: none;">
+                                            <label><input type="checkbox" value="Latin American"> Latin American <span class="count"></span></label>
+                                            <div class="cultural-items">
+                                                <label><input type="checkbox" value="Mexican"> Mexican <span class="count"></span></label>
+                                            </div>
+                                            <label><input type="checkbox" value="Caribbean"> Caribbean <span class="count"></span></label>
+                                            <label><input type="checkbox" value="Indigenous/Native American"> Indigenous/Native American <span class="count"></span></label>
+                                            <label><input type="checkbox" value="African American diaspora"> African American diaspora <span class="count"></span></label>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- African -->
+                                    <div class="cultural-region">
+                                        <div class="cultural-header">
+                                            <button class="cultural-toggle" aria-expanded="false">
+                                                <span class="toggle-arrow">▶</span>
+                                            </button>
+                                            <label class="region-label">
+                                                <input type="checkbox" value="African" class="region-checkbox">
+                                                <span>African</span>
+                                                <span class="count"></span>
+                                            </label>
+                                        </div>
+                                        <div class="cultural-subregions" style="display: none;">
+                                            <label><input type="checkbox" value="West African"> West African <span class="count"></span></label>
+                                            <label><input type="checkbox" value="Ethiopian"> Ethiopian <span class="count"></span></label>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- European -->
+                                    <div class="cultural-region">
+                                        <div class="cultural-header">
+                                            <button class="cultural-toggle" aria-expanded="false">
+                                                <span class="toggle-arrow">▶</span>
+                                            </button>
+                                            <label class="region-label">
+                                                <input type="checkbox" value="European" class="region-checkbox">
+                                                <span>European</span>
+                                                <span class="count"></span>
+                                            </label>
+                                        </div>
+                                        <div class="cultural-subregions" style="display: none;">
+                                            <label><input type="checkbox" value="Mediterranean"> Mediterranean <span class="count"></span></label>
+                                            <div class="cultural-items">
+                                                <label><input type="checkbox" value="Italian"> Italian <span class="count"></span></label>
+                                            </div>
+                                            <label><input type="checkbox" value="Eastern European"> Eastern European <span class="count"></span></label>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Middle Eastern -->
+                                    <div class="cultural-region">
+                                        <div class="cultural-header">
+                                            <button class="cultural-toggle" aria-expanded="false">
+                                                <span class="toggle-arrow">▶</span>
+                                            </button>
+                                            <label class="region-label">
+                                                <input type="checkbox" value="Middle Eastern" class="region-checkbox">
+                                                <span>Middle Eastern</span>
+                                                <span class="count"></span>
+                                            </label>
+                                        </div>
+                                        <div class="cultural-subregions" style="display: none;">
+                                            <label><input type="checkbox" value="Levantine"> Levantine <span class="count"></span></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="filter-group">
+                            <label class="filter-label">
+                                <span class="filter-icon">📋</span>
+                                Lesson Format
+                            </label>
+                            <select id="formatFilter" aria-label="Lesson Format">
+                                <option value="">All Formats</option>
+                                <option value="Standalone">Standalone</option>
+                                <option value="Multi-session unit">Multi-session unit</option>
+                                <option value="Double period">Double period</option>
+                                <option value="Single period">Single period</option>
+                                <option value="Co-taught">Co-taught</option>
+                                <option value="Remote/virtual adapted">Remote/virtual</option>
+                                <option value="Mobile education format">Mobile education</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content Area -->
+            <main class="results-area">
+                <!-- Results Header -->
+                <div class="results-header">
+                    <div class="results-info">
+                        <h2><span id="resultCount">831</span> lessons found</h2>
+                        <p id="searchSummary" class="search-summary"></p>
+                    </div>
+                    <div class="results-controls">
+                        <div class="view-toggle">
+                            <button id="cardViewBtn" class="view-btn active" aria-label="Card view">
+                                <span class="view-icon">⊞</span>
+                            </button>
+                            <button id="listViewBtn" class="view-btn" aria-label="List view">
+                                <span class="view-icon">☰</span>
+                            </button>
+                        </div>
+                        <select id="sortBy" aria-label="Sort results">
+                            <option value="title">Sort by Title</option>
+                            <option value="confidence">Sort by Confidence</option>
+                            <option value="grade">Sort by Grade</option>
+                            <option value="modified">Sort by Last Modified</option>
+                        </select>
+                        <button id="exportBtn" class="btn-secondary">
+                            <span class="export-icon">↓</span> Export CSV
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Results Container -->
+                <div id="resultsContainer" class="results-grid">
+                    <!-- Results will be populated here -->
+                </div>
+
+                <!-- Load More -->
+                <div id="loadMoreContainer" style="display: none;">
+                    <button id="loadMoreBtn" class="btn-primary">Load More Results</button>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Mobile Filter Toggle -->
+    <button id="mobileFilterToggle" class="mobile-filter-toggle mobile-only" aria-label="Open filters">
+        <span class="filter-icon">⚙</span> Filters
+    </button>
+
+    <!-- Lesson Detail Modal -->
+    <div id="lessonModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <button class="modal-close" aria-label="Close modal">&times;</button>
+            <div id="modalContent">
+                <!-- Lesson details will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="search.js"></script>
+</body>
+</html>
