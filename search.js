@@ -5,6 +5,7 @@ let currentPage = 0;
 const LESSONS_PER_PAGE = 20;
 let currentView = 'grid'; // 'grid' or 'list'
 let activeFilters = {};
+let lunrIndex = null; // Lunr search index
 
 // Cultural heritage hierarchy for search
 const CULTURAL_HIERARCHY = {
@@ -41,6 +42,38 @@ document.addEventListener('DOMContentLoaded', async () => {
         const response = await fetch('./data/consolidated_lessons.json');
         allLessons = await response.json();
         filteredLessons = [...allLessons];
+        
+        // Build Lunr search index
+        lunrIndex = lunr(function() {
+            this.ref('index');
+            this.field('title', { boost: 10 });
+            this.field('summary', { boost: 5 });
+            this.field('ingredients');
+            this.field('themes');
+            this.field('cultural');
+            
+            allLessons.forEach((lesson, index) => {
+                // Pre-process text to handle numbers
+                const processText = (text) => {
+                    if (!text) return '';
+                    return text.toString()
+                        .replace(/\b3\b/g, 'three')
+                        .replace(/\b1st\b/gi, 'first')
+                        .replace(/\b2nd\b/gi, 'second')
+                        .replace(/\b3rd\b/gi, 'third');
+                };
+                
+                this.add({
+                    index: index,
+                    title: processText(lesson.lessonTitle),
+                    summary: processText(lesson.lessonSummary),
+                    ingredients: processText((lesson.metadata.mainIngredients || []).join(' ')),
+                    themes: lesson.metadata.thematicCategories.join(' '),
+                    cultural: (lesson.metadata.culturalHeritage || []).join(' ')
+                });
+            });
+        });
+        
         updateFilterCounts();
         displayResults();
         setupEventListeners();
@@ -856,15 +889,7 @@ function performSearch() {
 
 // Text search helper
 function matchesTextSearch(lesson, searchTerm) {
-    const searchableText = [
-        lesson.lessonTitle,
-        lesson.lessonSummary,
-        ...(lesson.metadata.mainIngredients || []),
-        ...(lesson.metadata.thematicCategories || []),
-        ...(lesson.metadata.culturalHeritage || [])
-    ].join(' ').toLowerCase();
-    
-    // Check if search term matches ingredient groups
+    // First check ingredient groups (keep existing functionality)
     for (const [group, ingredients] of Object.entries(INGREDIENT_GROUPS)) {
         if (ingredients.some(ing => ing.includes(searchTerm))) {
             if ((lesson.metadata.mainIngredients || []).includes(group)) {
@@ -872,6 +897,37 @@ function matchesTextSearch(lesson, searchTerm) {
             }
         }
     }
+    
+    // Use Lunr search if index is available
+    if (lunrIndex) {
+        try {
+            // Pre-process search term to handle numbers
+            const processedTerm = searchTerm
+                .replace(/\b3\b/g, 'three')
+                .replace(/\b1st\b/gi, 'first')
+                .replace(/\b2nd\b/gi, 'second')
+                .replace(/\b3rd\b/gi, 'third');
+            
+            // Search with Lunr
+            const results = lunrIndex.search(processedTerm);
+            
+            // Check if this lesson is in the results
+            const lessonIndex = allLessons.indexOf(lesson);
+            return results.some(result => parseInt(result.ref) === lessonIndex);
+        } catch (e) {
+            // If Lunr search fails, fall back to simple search
+            console.warn('Lunr search failed:', e);
+        }
+    }
+    
+    // Fallback to simple includes search
+    const searchableText = [
+        lesson.lessonTitle,
+        lesson.lessonSummary,
+        ...(lesson.metadata.mainIngredients || []),
+        ...(lesson.metadata.thematicCategories || []),
+        ...(lesson.metadata.culturalHeritage || [])
+    ].join(' ').toLowerCase();
     
     return searchableText.includes(searchTerm);
 }
