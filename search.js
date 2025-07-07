@@ -1039,16 +1039,25 @@ function createLessonCard(lesson) {
         </div>
         <p class="lesson-summary">${lesson.lessonSummary}</p>
         <div class="lesson-meta">
-            <span class="meta-item">
-                <span class="meta-icon">📚</span>
-                Grades: ${lesson.metadata.gradeLevel.join(', ')}
-            </span>
-            <span class="meta-item">
-                <span class="meta-icon">📍</span>
-                ${lesson.metadata.locationRequirements.join('/')}
-            </span>
-            ${lesson.metadata.cookingSkills?.length ? '<span class="meta-item"><span class="meta-icon">🍳</span> Cooking</span>' : ''}
-            ${lesson.metadata.gardenSkills?.length ? '<span class="meta-item"><span class="meta-icon">🌱</span> Garden</span>' : ''}
+            <div class="meta-items">
+                <span class="meta-item">
+                    <span class="meta-icon">📚</span>
+                    Grades: ${lesson.metadata.gradeLevel.join(', ')}
+                </span>
+                <span class="meta-item">
+                    <span class="meta-icon">📍</span>
+                    ${lesson.metadata.locationRequirements.join('/')}
+                </span>
+                ${lesson.metadata.cookingSkills?.length ? '<span class="meta-item"><span class="meta-icon">🍳</span> Cooking</span>' : ''}
+                ${lesson.metadata.gardenSkills?.length ? '<span class="meta-item"><span class="meta-icon">🌱</span> Garden</span>' : ''}
+            </div>
+            ${lesson.fileLink ? `
+            <a href="${lesson.fileLink}" target="_blank" class="lesson-link" onclick="event.stopPropagation()">
+                <span class="link-icon">📄</span>
+                View Lesson Plan
+                <span class="external-icon">↗</span>
+            </a>
+            ` : ''}
         </div>
         <div class="lesson-tags">
             ${lesson.metadata.seasonTiming.map(season => 
@@ -1061,15 +1070,6 @@ function createLessonCard(lesson) {
                 `<span class="tag theme-tag">${theme}</span>`
             ).join('')}
         </div>
-        ${lesson.fileLink ? `
-        <div class="lesson-link-wrapper">
-            <a href="${lesson.fileLink}" target="_blank" class="lesson-link" onclick="event.stopPropagation()">
-                <span class="link-icon">📄</span>
-                View Lesson Plan
-                <span class="external-icon">↗</span>
-            </a>
-        </div>
-        ` : ''}
     `;
     
     return card;

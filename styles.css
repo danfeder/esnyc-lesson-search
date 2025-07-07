@@ -825,9 +825,18 @@ select[multiple] {
 }
 
 .lesson-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     font-size: 0.813rem;
     color: var(--gray-500);
     margin-bottom: var(--space-md);
+}
+
+.meta-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
 }
 
 .meta-item {
@@ -992,15 +1001,16 @@ select[multiple] {
 .lesson-link {
     display: inline-flex;
     align-items: center;
-    gap: var(--space-sm);
-    padding: var(--space-sm) var(--space-md);
+    gap: var(--space-xs);
+    padding: 0.375rem 0.75rem;
     background: var(--primary-green);
     color: var(--white);
     text-decoration: none;
     border-radius: var(--radius-md);
-    font-size: 0.875rem;
-    font-weight: 600;
+    font-size: 0.813rem;
+    font-weight: 500;
     transition: all 0.2s ease;
+    flex-shrink: 0;
 }
 
 .lesson-link:hover {
@@ -1010,12 +1020,12 @@ select[multiple] {
 }
 
 .lesson-link .link-icon {
-    font-size: 1rem;
+    font-size: 0.875rem;
 }
 
 .lesson-link .external-icon {
-    font-size: 0.75rem;
-    margin-left: var(--space-xs);
+    font-size: 0.688rem;
+    margin-left: 0.125rem;
 }
 
 /* Prominent link in modal */
