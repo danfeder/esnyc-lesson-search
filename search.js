@@ -1061,6 +1061,15 @@ function createLessonCard(lesson) {
                 `<span class="tag theme-tag">${theme}</span>`
             ).join('')}
         </div>
+        ${lesson.fileLink ? `
+        <div class="lesson-link-wrapper">
+            <a href="${lesson.fileLink}" target="_blank" class="lesson-link" onclick="event.stopPropagation()">
+                <span class="link-icon">📄</span>
+                View Lesson Plan
+                <span class="external-icon">↗</span>
+            </a>
+        </div>
+        ` : ''}
     `;
     
     return card;
@@ -1083,7 +1092,15 @@ function showLessonDetails(lesson) {
             <p>${lesson.lessonSummary}</p>
             <p><strong>Last Modified:</strong> ${new Date(lesson.lastModified).toLocaleDateString()}</p>
             <p><strong>Confidence Score:</strong> ${lesson.confidence.overall}%</p>
-            ${lesson.fileLink ? `<a href="${lesson.fileLink}" target="_blank" class="btn-link">📄 View Original Lesson Plan</a>` : ''}
+            ${lesson.fileLink ? `
+            <div class="lesson-link-prominent">
+                <a href="${lesson.fileLink}" target="_blank" class="btn-primary-link">
+                    <span class="link-icon">📄</span>
+                    View Full Lesson Plan
+                    <span class="external-icon">↗</span>
+                </a>
+            </div>
+            ` : ''}
         </div>
         
         <div class="lesson-detail-content">
