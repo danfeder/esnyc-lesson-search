@@ -226,6 +226,128 @@
                     </div>
                 </div>
 
+                <div class="filter-group collapsible">
+                    <button class="filter-header" aria-expanded="false" aria-controls="culturalFilter">
+                        <span class="filter-icon">🌍</span>
+                        <span>Cultural Heritage</span>
+                        <span class="collapse-icon">▼</span>
+                    </button>
+                    <div class="filter-content" id="culturalFilter" style="display: none;">
+                        <div class="cultural-tree">
+                            <!-- Asian -->
+                            <div class="cultural-region">
+                                <div class="cultural-header">
+                                    <button class="cultural-toggle" aria-expanded="false">
+                                        <span class="toggle-arrow">▶</span>
+                                    </button>
+                                    <label class="region-label">
+                                        <input type="checkbox" value="Asian" class="region-checkbox">
+                                        <span>Asian</span>
+                                        <span class="count"></span>
+                                    </label>
+                                </div>
+                                <div class="cultural-subregions" style="display: none;">
+                                    <label><input type="checkbox" value="East Asian"> East Asian <span class="count"></span></label>
+                                    <div class="cultural-items">
+                                        <label><input type="checkbox" value="Chinese"> Chinese <span class="count"></span></label>
+                                        <label><input type="checkbox" value="Japanese"> Japanese <span class="count"></span></label>
+                                        <label><input type="checkbox" value="Korean"> Korean <span class="count"></span></label>
+                                    </div>
+                                    <label><input type="checkbox" value="Southeast Asian"> Southeast Asian <span class="count"></span></label>
+                                    <div class="cultural-items">
+                                        <label><input type="checkbox" value="Vietnamese"> Vietnamese <span class="count"></span></label>
+                                        <label><input type="checkbox" value="Filipino"> Filipino <span class="count"></span></label>
+                                    </div>
+                                    <label><input type="checkbox" value="South Asian"> South Asian <span class="count"></span></label>
+                                    <div class="cultural-items">
+                                        <label><input type="checkbox" value="Indian"> Indian <span class="count"></span></label>
+                                        <label><input type="checkbox" value="Bengali"> Bengali <span class="count"></span></label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Americas -->
+                            <div class="cultural-region">
+                                <div class="cultural-header">
+                                    <button class="cultural-toggle" aria-expanded="false">
+                                        <span class="toggle-arrow">▶</span>
+                                    </button>
+                                    <label class="region-label">
+                                        <input type="checkbox" value="Americas" class="region-checkbox">
+                                        <span>Americas</span>
+                                        <span class="count"></span>
+                                    </label>
+                                </div>
+                                <div class="cultural-subregions" style="display: none;">
+                                    <label><input type="checkbox" value="Latin American"> Latin American <span class="count"></span></label>
+                                    <div class="cultural-items">
+                                        <label><input type="checkbox" value="Mexican"> Mexican <span class="count"></span></label>
+                                    </div>
+                                    <label><input type="checkbox" value="Caribbean"> Caribbean <span class="count"></span></label>
+                                    <label><input type="checkbox" value="Indigenous/Native American"> Indigenous/Native American <span class="count"></span></label>
+                                    <label><input type="checkbox" value="African American diaspora"> African American diaspora <span class="count"></span></label>
+                                </div>
+                            </div>
+                            
+                            <!-- African -->
+                            <div class="cultural-region">
+                                <div class="cultural-header">
+                                    <button class="cultural-toggle" aria-expanded="false">
+                                        <span class="toggle-arrow">▶</span>
+                                    </button>
+                                    <label class="region-label">
+                                        <input type="checkbox" value="African" class="region-checkbox">
+                                        <span>African</span>
+                                        <span class="count"></span>
+                                    </label>
+                                </div>
+                                <div class="cultural-subregions" style="display: none;">
+                                    <label><input type="checkbox" value="West African"> West African <span class="count"></span></label>
+                                    <label><input type="checkbox" value="Ethiopian"> Ethiopian <span class="count"></span></label>
+                                </div>
+                            </div>
+                            
+                            <!-- European -->
+                            <div class="cultural-region">
+                                <div class="cultural-header">
+                                    <button class="cultural-toggle" aria-expanded="false">
+                                        <span class="toggle-arrow">▶</span>
+                                    </button>
+                                    <label class="region-label">
+                                        <input type="checkbox" value="European" class="region-checkbox">
+                                        <span>European</span>
+                                        <span class="count"></span>
+                                    </label>
+                                </div>
+                                <div class="cultural-subregions" style="display: none;">
+                                    <label><input type="checkbox" value="Mediterranean"> Mediterranean <span class="count"></span></label>
+                                    <div class="cultural-items">
+                                        <label><input type="checkbox" value="Italian"> Italian <span class="count"></span></label>
+                                    </div>
+                                    <label><input type="checkbox" value="Eastern European"> Eastern European <span class="count"></span></label>
+                                </div>
+                            </div>
+                            
+                            <!-- Middle Eastern -->
+                            <div class="cultural-region">
+                                <div class="cultural-header">
+                                    <button class="cultural-toggle" aria-expanded="false">
+                                        <span class="toggle-arrow">▶</span>
+                                    </button>
+                                    <label class="region-label">
+                                        <input type="checkbox" value="Middle Eastern" class="region-checkbox">
+                                        <span>Middle Eastern</span>
+                                        <span class="count"></span>
+                                    </label>
+                                </div>
+                                <div class="cultural-subregions" style="display: none;">
+                                    <label><input type="checkbox" value="Levantine"> Levantine <span class="count"></span></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
                 <!-- Advanced Filters Section -->
                 <div class="advanced-section">
@@ -235,128 +357,6 @@
                     </button>
                     
                     <div id="advancedFilters" class="advanced-filters" style="display: none;">
-                        <div class="filter-group collapsible">
-                            <button class="filter-header" aria-expanded="false" aria-controls="culturalFilter">
-                                <span class="filter-icon">🌍</span>
-                                <span>Cultural Heritage</span>
-                                <span class="collapse-icon">▼</span>
-                            </button>
-                            <div class="filter-content" id="culturalFilter" style="display: none;">
-                                <div class="cultural-tree">
-                                    <!-- Asian -->
-                                    <div class="cultural-region">
-                                        <div class="cultural-header">
-                                            <button class="cultural-toggle" aria-expanded="false">
-                                                <span class="toggle-arrow">▶</span>
-                                            </button>
-                                            <label class="region-label">
-                                                <input type="checkbox" value="Asian" class="region-checkbox">
-                                                <span>Asian</span>
-                                                <span class="count"></span>
-                                            </label>
-                                        </div>
-                                        <div class="cultural-subregions" style="display: none;">
-                                            <label><input type="checkbox" value="East Asian"> East Asian <span class="count"></span></label>
-                                            <div class="cultural-items">
-                                                <label><input type="checkbox" value="Chinese"> Chinese <span class="count"></span></label>
-                                                <label><input type="checkbox" value="Japanese"> Japanese <span class="count"></span></label>
-                                                <label><input type="checkbox" value="Korean"> Korean <span class="count"></span></label>
-                                            </div>
-                                            <label><input type="checkbox" value="Southeast Asian"> Southeast Asian <span class="count"></span></label>
-                                            <div class="cultural-items">
-                                                <label><input type="checkbox" value="Vietnamese"> Vietnamese <span class="count"></span></label>
-                                                <label><input type="checkbox" value="Filipino"> Filipino <span class="count"></span></label>
-                                            </div>
-                                            <label><input type="checkbox" value="South Asian"> South Asian <span class="count"></span></label>
-                                            <div class="cultural-items">
-                                                <label><input type="checkbox" value="Indian"> Indian <span class="count"></span></label>
-                                                <label><input type="checkbox" value="Bengali"> Bengali <span class="count"></span></label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Americas -->
-                                    <div class="cultural-region">
-                                        <div class="cultural-header">
-                                            <button class="cultural-toggle" aria-expanded="false">
-                                                <span class="toggle-arrow">▶</span>
-                                            </button>
-                                            <label class="region-label">
-                                                <input type="checkbox" value="Americas" class="region-checkbox">
-                                                <span>Americas</span>
-                                                <span class="count"></span>
-                                            </label>
-                                        </div>
-                                        <div class="cultural-subregions" style="display: none;">
-                                            <label><input type="checkbox" value="Latin American"> Latin American <span class="count"></span></label>
-                                            <div class="cultural-items">
-                                                <label><input type="checkbox" value="Mexican"> Mexican <span class="count"></span></label>
-                                            </div>
-                                            <label><input type="checkbox" value="Caribbean"> Caribbean <span class="count"></span></label>
-                                            <label><input type="checkbox" value="Indigenous/Native American"> Indigenous/Native American <span class="count"></span></label>
-                                            <label><input type="checkbox" value="African American diaspora"> African American diaspora <span class="count"></span></label>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- African -->
-                                    <div class="cultural-region">
-                                        <div class="cultural-header">
-                                            <button class="cultural-toggle" aria-expanded="false">
-                                                <span class="toggle-arrow">▶</span>
-                                            </button>
-                                            <label class="region-label">
-                                                <input type="checkbox" value="African" class="region-checkbox">
-                                                <span>African</span>
-                                                <span class="count"></span>
-                                            </label>
-                                        </div>
-                                        <div class="cultural-subregions" style="display: none;">
-                                            <label><input type="checkbox" value="West African"> West African <span class="count"></span></label>
-                                            <label><input type="checkbox" value="Ethiopian"> Ethiopian <span class="count"></span></label>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- European -->
-                                    <div class="cultural-region">
-                                        <div class="cultural-header">
-                                            <button class="cultural-toggle" aria-expanded="false">
-                                                <span class="toggle-arrow">▶</span>
-                                            </button>
-                                            <label class="region-label">
-                                                <input type="checkbox" value="European" class="region-checkbox">
-                                                <span>European</span>
-                                                <span class="count"></span>
-                                            </label>
-                                        </div>
-                                        <div class="cultural-subregions" style="display: none;">
-                                            <label><input type="checkbox" value="Mediterranean"> Mediterranean <span class="count"></span></label>
-                                            <div class="cultural-items">
-                                                <label><input type="checkbox" value="Italian"> Italian <span class="count"></span></label>
-                                            </div>
-                                            <label><input type="checkbox" value="Eastern European"> Eastern European <span class="count"></span></label>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Middle Eastern -->
-                                    <div class="cultural-region">
-                                        <div class="cultural-header">
-                                            <button class="cultural-toggle" aria-expanded="false">
-                                                <span class="toggle-arrow">▶</span>
-                                            </button>
-                                            <label class="region-label">
-                                                <input type="checkbox" value="Middle Eastern" class="region-checkbox">
-                                                <span>Middle Eastern</span>
-                                                <span class="count"></span>
-                                            </label>
-                                        </div>
-                                        <div class="cultural-subregions" style="display: none;">
-                                            <label><input type="checkbox" value="Levantine"> Levantine <span class="count"></span></label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                         <div class="filter-group">
                             <label class="filter-label">
                                 <span class="filter-icon">📋</span>
