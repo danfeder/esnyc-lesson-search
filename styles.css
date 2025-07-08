@@ -321,13 +321,14 @@ body {
 .filters-sidebar {
     background: var(--white);
     border-radius: var(--radius-lg);
-    padding: var(--space-lg);
+    padding: var(--space-md) var(--space-lg);
     box-shadow: var(--shadow-sm);
     height: fit-content;
     position: sticky;
     top: 100px;
     max-height: calc(100vh - 120px);
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .sidebar-header {
@@ -353,6 +354,22 @@ body {
 }
 
 /* ===== Filter Groups ===== */
+.filter-section-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--gray-600);
+    margin-top: var(--space-lg);
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-sm);
+    border-bottom: 2px solid var(--gray-200);
+}
+
+.filter-section-title:first-child {
+    margin-top: 0;
+}
+
 .filter-group {
     margin-bottom: var(--space-md);
 }
@@ -367,11 +384,11 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--space-sm) 0;
+    padding: var(--space-xs) 0;
     background: transparent;
     border: none;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 0.875rem;
     font-weight: 600;
     color: var(--gray-800);
     transition: color 0.2s ease;
@@ -417,42 +434,53 @@ body {
 
 .grade-group-item {
     display: flex;
-    flex-direction: column;
-    background: var(--gray-50);
-    border-radius: var(--radius-md);
-    padding: var(--space-sm);
-    border: 1px solid var(--gray-200);
+    align-items: center;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-xs);
 }
 
 .grade-group-label {
     display: flex;
     align-items: center;
     cursor: pointer;
-    padding: var(--space-xs) 0;
-    font-weight: 500;
-    color: var(--gray-800);
+    font-size: 0.813rem;
+    color: var(--gray-700);
+    transition: color 0.2s ease;
+    flex: 1;
+}
+
+.grade-group-label:hover {
+    color: var(--primary-green);
 }
 
 .grade-group-label input {
-    margin-right: var(--space-sm);
+    margin-right: var(--space-xs);
 }
 
 .grade-group-name {
     flex: 1;
+    margin-left: var(--space-xs);
 }
 
 .expand-grades-btn {
     background: none;
     border: none;
-    padding: var(--space-xs);
+    padding: 2px var(--space-xs);
     cursor: pointer;
-    color: var(--gray-600);
-    margin-left: auto;
-    transition: transform 0.2s ease;
+    color: var(--gray-500);
+    font-size: 0.75rem;
+    transition: all 0.2s ease;
+    border-radius: var(--radius-sm);
 }
 
 .expand-grades-btn:hover {
     color: var(--primary-green);
+    background: var(--gray-100);
+}
+
+.expand-icon {
+    display: inline-block;
+    transition: transform 0.2s ease;
 }
 
 .expand-grades-btn[aria-expanded="true"] .expand-icon {
@@ -460,16 +488,43 @@ body {
 }
 
 .individual-grades {
-    padding-left: var(--space-xl);
+    padding-left: var(--space-md);
     margin-top: var(--space-xs);
+    margin-bottom: var(--space-xs);
     display: flex;
     flex-direction: column;
-    gap: var(--space-xs);
+    gap: 0.125rem;
 }
 
 .individual-grades label {
-    font-size: 0.813rem;
+    display: flex;
+    align-items: center;
+    font-size: 0.75rem;
     color: var(--gray-600);
+    cursor: pointer;
+    transition: color 0.2s ease;
+    width: 100%;
+    min-width: 0;
+    padding: 0.125rem 0;
+}
+
+.individual-grades label:hover {
+    color: var(--primary-green);
+}
+
+.individual-grades input[type="checkbox"] {
+    margin-right: var(--space-xs);
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+}
+
+.individual-grades .count {
+    margin-left: auto;
+    font-size: 0.688rem;
+    color: var(--gray-500);
+    flex-shrink: 0;
+    padding-left: 0.125rem;
 }
 
 /* ===== Cultural Heritage Tree ===== */
@@ -480,10 +535,7 @@ body {
 }
 
 .cultural-region {
-    background: var(--gray-50);
-    border-radius: var(--radius-md);
-    padding: var(--space-sm);
-    border: 1px solid var(--gray-200);
+    margin-bottom: var(--space-xs);
 }
 
 .cultural-header {
@@ -497,10 +549,18 @@ body {
     align-items: center;
     background: none;
     border: none;
-    padding: var(--space-xs);
+    padding: 2px var(--space-xs) 2px 0;
     cursor: pointer;
-    color: var(--gray-800);
+    color: var(--gray-600);
     flex-shrink: 0;
+    font-size: 0.75rem;
+    transition: all 0.2s ease;
+    border-radius: var(--radius-sm);
+}
+
+.cultural-toggle:hover {
+    color: var(--primary-green);
+    background: var(--gray-100);
 }
 
 .toggle-arrow {
@@ -518,9 +578,15 @@ body {
     display: flex;
     align-items: center;
     flex: 1;
-    font-weight: 500;
-    padding: var(--space-xs) 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--gray-700);
     cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.region-label:hover {
+    color: var(--primary-green);
 }
 
 .region-label input {
@@ -529,17 +595,21 @@ body {
 
 .cultural-subregions {
     margin-top: var(--space-sm);
-    padding-left: var(--space-lg);
+    padding-left: calc(var(--space-lg) - 2px);
     display: flex;
     flex-direction: column;
     gap: var(--space-xs);
+    border-left: 2px solid var(--gray-200);
+    margin-left: var(--space-xs);
 }
 
 .cultural-items {
-    padding-left: var(--space-lg);
+    padding-left: calc(var(--space-lg) - 2px);
     display: flex;
     flex-direction: column;
     gap: var(--space-xs);
+    border-left: 2px solid var(--gray-100);
+    margin-left: var(--space-xs);
 }
 
 .cultural-subregions label,
@@ -553,12 +623,16 @@ body {
 
 .cultural-subregions > label {
     font-weight: 500;
-}
-
-.cultural-items label {
     font-size: 0.813rem;
     color: var(--gray-600);
 }
+
+.cultural-items label {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--gray-500);
+}
+
 
 .filter-label {
     display: flex;
@@ -597,7 +671,9 @@ body {
     cursor: pointer;
 }
 
-.checkbox-group .count {
+.checkbox-group .count,
+.grade-group-label .count,
+.region-label .count {
     margin-left: auto;
     font-size: 0.75rem;
     color: var(--gray-500);

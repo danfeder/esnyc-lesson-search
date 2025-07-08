@@ -6,6 +6,7 @@ const LESSONS_PER_PAGE = 20;
 let currentView = 'grid'; // 'grid' or 'list'
 let activeFilters = {};
 let lunrIndex = null; // Lunr search index
+let isUpdatingFilters = false; // Flag to prevent recursive updates
 
 // Cultural heritage hierarchy for search
 const CULTURAL_HIERARCHY = {
@@ -159,7 +160,20 @@ function setupEventListeners() {
     
     // All filter checkboxes and selects
     document.querySelectorAll('input[type="checkbox"], input[type="radio"], select').forEach(element => {
-        element.addEventListener('change', performSearch);
+        // Skip elements that should not trigger search
+        if (element.id === 'includeAllSeasons') {
+            // Special handling for includeAllSeasons
+            element.addEventListener('change', () => {
+                performSearch();
+            });
+        } else if (element.classList.contains('grade-group-checkbox')) {
+            // Grade group checkboxes are handled separately
+            return;
+        } else {
+            element.addEventListener('change', () => {
+                performSearch();
+            });
+        }
     });
     
     // Modal close
@@ -384,21 +398,28 @@ function updateFilterCounts() {
 
 function updateGradeGroupCounts(gradeCounts) {
     // Count unique lessons for each grade group
-    const earlyElemGrades = ['3K', 'PK', 'K', '1', '2'];
-    const elemGrades = ['3', '4', '5'];
+    const earlyChildhoodGrades = ['3K', 'PK'];
+    const lowerElemGrades = ['K', '1', '2'];
+    const upperElemGrades = ['3', '4', '5'];
     const middleGrades = ['6', '7', '8'];
     
-    // Early Elementary (3K-2)
-    const earlyElemCount = allLessons.filter(lesson => 
-        lesson.metadata.gradeLevel.some(grade => earlyElemGrades.includes(grade))
+    // Early Childhood (3K-PK)
+    const earlyChildhoodCount = allLessons.filter(lesson => 
+        lesson.metadata.gradeLevel.some(grade => earlyChildhoodGrades.includes(grade))
     ).length;
-    document.getElementById('earlyElemCount').textContent = `(${earlyElemCount})`;
+    document.getElementById('earlyChildhoodCount').textContent = `(${earlyChildhoodCount})`;
     
-    // Elementary (3-5)
-    const elemCount = allLessons.filter(lesson => 
-        lesson.metadata.gradeLevel.some(grade => elemGrades.includes(grade))
+    // Lower Elementary (K-2)
+    const lowerElemCount = allLessons.filter(lesson => 
+        lesson.metadata.gradeLevel.some(grade => lowerElemGrades.includes(grade))
     ).length;
-    document.getElementById('elemCount').textContent = `(${elemCount})`;
+    document.getElementById('lowerElemCount').textContent = `(${lowerElemCount})`;
+    
+    // Upper Elementary (3-5)
+    const upperElemCount = allLessons.filter(lesson => 
+        lesson.metadata.gradeLevel.some(grade => upperElemGrades.includes(grade))
+    ).length;
+    document.getElementById('upperElemCount').textContent = `(${upperElemCount})`;
     
     // Middle School (6-8)
     const middleCount = allLessons.filter(lesson => 
@@ -416,6 +437,9 @@ function updateFilterGroupCount(elementId, count) {
 
 // Update filter counts based on current filtered results
 function updateDynamicFilterCounts() {
+    // Set flag to prevent recursive updates
+    isUpdatingFilters = true;
+    
     // Get current filter state
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
     const selectedGrades = getSelectedValues('gradeLevelFilters');
@@ -637,23 +661,32 @@ function updateDynamicFilterCounts() {
     
     // Update grade group counts based on filtered results
     updateDynamicGradeGroupCounts();
+    
+    // Reset flag after all updates are done
+    isUpdatingFilters = false;
 }
 
 function updateDynamicGradeGroupCounts() {
-    const earlyElemGrades = ['3K', 'PK', 'K', '1', '2'];
-    const elemGrades = ['3', '4', '5'];
+    const earlyChildhoodGrades = ['3K', 'PK'];
+    const lowerElemGrades = ['K', '1', '2'];
+    const upperElemGrades = ['3', '4', '5'];
     const middleGrades = ['6', '7', '8'];
     
     // Count from filtered lessons
-    const earlyElemCount = filteredLessons.filter(lesson => 
-        lesson.metadata.gradeLevel.some(grade => earlyElemGrades.includes(grade))
+    const earlyChildhoodCount = filteredLessons.filter(lesson => 
+        lesson.metadata.gradeLevel.some(grade => earlyChildhoodGrades.includes(grade))
     ).length;
-    document.getElementById('earlyElemCount').textContent = `(${earlyElemCount})`;
+    document.getElementById('earlyChildhoodCount').textContent = `(${earlyChildhoodCount})`;
     
-    const elemCount = filteredLessons.filter(lesson => 
-        lesson.metadata.gradeLevel.some(grade => elemGrades.includes(grade))
+    const lowerElemCount = filteredLessons.filter(lesson => 
+        lesson.metadata.gradeLevel.some(grade => lowerElemGrades.includes(grade))
     ).length;
-    document.getElementById('elemCount').textContent = `(${elemCount})`;
+    document.getElementById('lowerElemCount').textContent = `(${lowerElemCount})`;
+    
+    const upperElemCount = filteredLessons.filter(lesson => 
+        lesson.metadata.gradeLevel.some(grade => upperElemGrades.includes(grade))
+    ).length;
+    document.getElementById('upperElemCount').textContent = `(${upperElemCount})`;
     
     const middleCount = filteredLessons.filter(lesson => 
         lesson.metadata.gradeLevel.some(grade => middleGrades.includes(grade))
@@ -722,6 +755,8 @@ function updateActiveFilters() {
     
     if (Object.keys(activeFilters).length === 0) {
         container.style.display = 'none';
+        // IMPORTANT: Still need to update search summary even with no filters!
+        updateSearchSummary();
         return;
     }
     
@@ -789,12 +824,26 @@ function updateSearchSummary() {
     if (activeFilters['Seasons']) {
         parts.push(`for ${activeFilters['Seasons']}`);
     }
+    if (activeFilters['Activities']) {
+        parts.push(`with ${activeFilters['Activities']}`);
+    }
+    if (activeFilters['Location']) {
+        parts.push(`in ${activeFilters['Location']} location`);
+    }
+    if (activeFilters['Cultures']) {
+        parts.push(`from ${activeFilters['Cultures']} heritage`);
+    }
     
     summary.textContent = parts.length ? 'Showing lessons ' + parts.join(', ') : '';
 }
 
 // Main search function
 function performSearch() {
+    // Skip if we're in the middle of updating filter counts
+    if (isUpdatingFilters) {
+        return;
+    }
+    
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
     
     // Start with all lessons
@@ -881,6 +930,7 @@ function performSearch() {
     updateActiveFilters();
     
     // Update filter counts based on current results
+    // Note: updateDynamicFilterCounts sets isUpdatingFilters flag to prevent recursive calls
     updateDynamicFilterCounts();
     
     // Display results
@@ -908,8 +958,20 @@ function matchesTextSearch(lesson, searchTerm) {
                 .replace(/\b2nd\b/gi, 'second')
                 .replace(/\b3rd\b/gi, 'third');
             
-            // Search with Lunr
-            const results = lunrIndex.search(processedTerm);
+            // Search with Lunr - try exact match first, then wildcard
+            let results = [];
+            try {
+                // Try exact match first
+                results = lunrIndex.search(processedTerm);
+            } catch (e) {
+                // If exact match fails, try wildcard search
+                try {
+                    results = lunrIndex.search(`*${processedTerm}*`);
+                } catch (e2) {
+                    // If wildcard fails too, fall back to simple search
+                    console.warn('Lunr search failed:', e2);
+                }
+            }
             
             // Check if this lesson is in the results
             const lessonIndex = allLessons.indexOf(lesson);
