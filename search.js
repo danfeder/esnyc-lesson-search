@@ -292,7 +292,6 @@ function updateFilterCounts() {
     });
     
     // Update filter group headers
-    updateFilterGroupCount('gradeCount', Object.keys(gradeCounts).length);
     
     // Theme counts
     const themeCounts = {};
@@ -309,7 +308,6 @@ function updateFilterCounts() {
         if (countSpan) countSpan.textContent = `(${count})`;
     });
     
-    updateFilterGroupCount('themeCount', Object.keys(themeCounts).length);
     
     // Season counts
     const seasonCounts = {};
@@ -328,7 +326,6 @@ function updateFilterCounts() {
         }
     });
     
-    updateFilterGroupCount('seasonCount', Object.keys(seasonCounts).length);
     
     // Competency counts
     const competencyCounts = {};
@@ -345,7 +342,6 @@ function updateFilterCounts() {
         if (countSpan) countSpan.textContent = `(${count})`;
     });
     
-    updateFilterGroupCount('competencyCount', Object.keys(competencyCounts).length);
     
     // Location counts
     const locationCounts = {};
@@ -362,7 +358,6 @@ function updateFilterCounts() {
         if (countSpan) countSpan.textContent = `(${count})`;
     });
     
-    updateFilterGroupCount('locationCount', Object.keys(locationCounts).length);
     
     // Activity type counts (non-overlapping)
     const cookingOnlyCount = allLessons.filter(l => 
@@ -390,7 +385,6 @@ function updateFilterCounts() {
     document.getElementById('bothCount').textContent = `(${bothCount})`;
     document.getElementById('academicOnlyCount').textContent = `(${academicOnlyCount})`;
     
-    updateFilterGroupCount('activityCount', 4);
     
     // Cultural heritage counts
     const culturalCounts = {};
@@ -407,7 +401,6 @@ function updateFilterCounts() {
         if (countSpan) countSpan.textContent = `(${count})`;
     });
     
-    updateFilterGroupCount('culturalCount', Object.keys(culturalCounts).length);
     
     // Grade group counts
     updateGradeGroupCounts(gradeCounts);
@@ -445,12 +438,6 @@ function updateGradeGroupCounts(gradeCounts) {
     document.getElementById('middleCount').textContent = `(${middleCount})`;
 }
 
-function updateFilterGroupCount(elementId, count) {
-    const element = document.getElementById(elementId);
-    if (element) {
-        element.textContent = `(${count})`;
-    }
-}
 
 // Update filter counts based on current filtered results
 function updateDynamicFilterCounts() {

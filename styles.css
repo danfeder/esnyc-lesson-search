@@ -403,13 +403,6 @@ body {
     margin-right: var(--space-sm);
 }
 
-.filter-count {
-    font-size: 0.875rem;
-    color: var(--gray-500);
-    font-weight: normal;
-    margin-left: auto;
-    margin-right: var(--space-sm);
-}
 
 .collapse-icon {
     transition: transform 0.2s ease;
